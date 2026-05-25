@@ -1,16 +1,17 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, SPEED):
         super().__init__() # инициализацирует innit базового класса
 
-        player_img = pygame.image.load('assets/entities/player.png').convert_alpha()
-        self.image = pygame.transform.scale(player_img, (60, 60))
+        sprite_player = pygame.image.load('assets/player/sprite_player.png')
+        player = sprite_player.subsurface(pygame.Rect(0, 0, 200, 200)) # обрезка спрайта
+        self.image = pygame.transform.scale(player, (600, 600)) # размеры обрезки
 
         self.rect = self.image.get_rect()
-        self.rect.center = (100, 100)
+        self.rect.center = (100, 100) # корды спавна персонажа
 
-        self.speed = 4
+        self.speed = SPEED
 
     def update(self):
         keys = pygame.key.get_pressed()

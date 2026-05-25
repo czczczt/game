@@ -3,6 +3,10 @@ import sys
 from player import Player
 from map import Map
 
+WEIGHT = 1920 # размеры экрана
+HEIGHT = 1080
+SPEED = 7 # скорость персонажа
+
 
 class Game:
     def __init__(self):
@@ -11,9 +15,9 @@ class Game:
         self.delta_time = 0.016
 
         self.all_sprites = pygame.sprite.Group()
-        self.map = Map()
-        self.player = Player()
-        self.all_sprites.add(self.map, self.player)
+        self.map = Map() # инициализация классов
+        self.player = Player(SPEED)
+        self.all_sprites.add(self.map, self.player) # добавляние классов в группу
 
     def toggle_pause(self):
         self.is_paused = not self.is_paused
@@ -45,13 +49,12 @@ class Game:
 
     def draw(self, screen):
         self.all_sprites.draw(screen)
-        screen.blit(text_start, (50, 50)) # отрисовка текста
-
+        screen.blit(text_start, (200, 200)) # отрисовка текста в координатах (200, 200)
 
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((800, 600)) # открытие окна 800x600
+    screen = pygame.display.set_mode((WEIGHT, HEIGHT)) # открытие окна WEIGHTxHEIGHT
     pygame.display.set_caption("100 БАЛЛОВ") # название
     icon = pygame.image.load('assets/logo.png') # иконка
     pygame.display.set_icon(icon)
