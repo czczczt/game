@@ -2,6 +2,7 @@ import pygame
 import sys
 from player import Player
 
+
 class Game:
     def __init__(self):
         self.is_paused = False
@@ -49,32 +50,33 @@ class Game:
         # self.enemy.draw(screen)
         # self.ui.draw(screen)
 
+
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode((800, 600)) # открытие окна 800x600
+    pygame.display.set_caption("100 БАЛЛОВ") # название
+    icon = pygame.image.load('assets/logo.png') # иконка
+    pygame.display.set_icon(icon)
+
     clock = pygame.time.Clock()
     game = Game()
 
     running = True
 
-    # classic game loop: Input -> Update -> Render
     while running:
-        # 1. Input
-        for event in pygame.event.get():
+        for event in pygame.event.get(): # закрытие окна
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN: # пауза на p
                 if event.key == pygame.K_p:
                     game.toggle_pause()
 
-        # 2. Update
         game.update()
 
-        # 3. Render
         game.draw(screen)
         pygame.display.flip()
 
-        game.delta_time = clock.tick(60) / 1000.0  # seconds since last frame
+        game.delta_time = clock.tick(60) / 1000.0
 
     pygame.quit()
     sys.exit()
