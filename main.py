@@ -1,6 +1,7 @@
 import pygame
 import sys
 from player import Player
+from map import Map
 
 
 class Game:
@@ -10,8 +11,9 @@ class Game:
         self.delta_time = 0.016
 
         self.all_sprites = pygame.sprite.Group()
+        self.map = Map()
         self.player = Player()
-        self.all_sprites.add(self.player)
+        self.all_sprites.add(self.map, self.player)
 
     def toggle_pause(self):
         self.is_paused = not self.is_paused
@@ -42,13 +44,9 @@ class Game:
         pass
 
     def draw(self, screen):
-        screen.fill((0, 0, 0))
         self.all_sprites.draw(screen)
-        # All rendering here
-        # Example:
-        # self.player.draw(screen)
-        # self.enemy.draw(screen)
-        # self.ui.draw(screen)
+        screen.blit(text_start, (50, 50)) # отрисовка текста
+
 
 
 if __name__ == "__main__":
@@ -57,6 +55,9 @@ if __name__ == "__main__":
     pygame.display.set_caption("100 БАЛЛОВ") # название
     icon = pygame.image.load('assets/logo.png') # иконка
     pygame.display.set_icon(icon)
+
+    font1 = pygame.font.Font('assets/font/1.ttf', 30) # шрифт
+    text_start = font1.render('начало', True, 'red')
 
     clock = pygame.time.Clock()
     game = Game()
