@@ -3,20 +3,22 @@ import sys
 from player import Player
 from map import Map
 
-WEIGHT = 1920 # размеры экрана
-HEIGHT = 1080
-SPEED = 7 # скорость персонажа
+WINDOW_SIZE = (1920, 1080) # размеры экрана
+
+SPEED = 10 # скорость персонажа
+SIZE = (600, 600) # размер
+ANIMATION_SPEED = 0.1
 
 
 class Game:
     def __init__(self):
         self.is_paused = False
         self.game_speed = 1.0
-        self.delta_time = 0.016
+        self.delta_time = 0.016 # время для 60 фпс
 
         self.all_sprites = pygame.sprite.Group()
-        self.map = Map() # инициализация классов
-        self.player = Player(SPEED)
+        self.player = Player(SIZE, SPEED, ANIMATION_SPEED) # инициализация классов
+        self.map = Map()
         self.all_sprites.add(self.map, self.player) # добавляние классов в группу
 
     def toggle_pause(self):
@@ -27,19 +29,14 @@ class Game:
 
     def update(self):
         if not self.is_paused:
-            scaled_delta_time = self.delta_time * self.game_speed
+            scaled_delta_time = self.delta_time * self.game_speed # реальное время между кадрами * коэф
             self.update_game_world(scaled_delta_time)
         else:
             self.update_paused_state()
 
     def update_game_world(self, scaled_delta_time):
-        self.all_sprites.update()
-        # All game logic here, such as moving objects, checking collisions, etc.
-        # Example:
-        # self.player.update(scaled_delta_time)
-        # self.enemy.update(scaled_delta_time)
-        # Physics.update(scaled_delta_time)
-        pass
+        self.player.update(scaled_delta_time) # передача реального времени между кадрами
+        self.map.update()
 
     def update_paused_state(self):
         # Update game menu or other paused state interactions
@@ -54,7 +51,7 @@ class Game:
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode((WEIGHT, HEIGHT)) # открытие окна WEIGHTxHEIGHT
+    screen = pygame.display.set_mode(WINDOW_SIZE) # открытие окна с размерами WINDOW_SIZE
     pygame.display.set_caption("100 БАЛЛОВ") # название
     icon = pygame.image.load('assets/logo.png') # иконка
     pygame.display.set_icon(icon)
@@ -80,7 +77,7 @@ if __name__ == "__main__":
         game.draw(screen)
         pygame.display.flip()
 
-        game.delta_time = clock.tick(60) / 1000.0
+        game.delta_time = clock.tick(60) / 1000.0 # реальное время между кадрами в секундах
 
     pygame.quit()
     sys.exit()
