@@ -23,10 +23,10 @@ class Player(pygame.sprite.Sprite):
         self.attack1 = [sprite_attack1.subsurface(pygame.Rect(i * 200, 0, 200, 200)) for i in range(4)]
         self.attack2 = [sprite_attack2.subsurface(pygame.Rect(i * 200, 0, 200, 200)) for i in range(4)]
 
+        # персонаж
         w = sprite_player.subsurface(pygame.Rect(0, 0, 200, 200)) # обрезка спрайта
         self.image = pygame.transform.scale(w, (600, 600)) # размеры обрезки
-
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect() # отрисовка персонажа
         self.rect.center = (100, 100) # корды спавна персонажа
 
         self.SIZE = SIZE
@@ -40,21 +40,29 @@ class Player(pygame.sprite.Sprite):
         if self.count >= self.ANIMATION_SPEED: # смена кадра зависит от ANIMATION_SPEED
             self.count = 0
             self.frame += 1
-            if self.frame == len(frames) - 1:
+            if self.frame == len(frames):
                 self.frame = 0
+        if self.frame >= len(frames):
+            self.frame = 0
         self.image = pygame.transform.scale(frames[self.frame], self.SIZE)
 
     def update(self, scaled_delta_time):
         keys = pygame.key.get_pressed()
         speed = self.SPEED * scaled_delta_time * 60 # лок на 60 фпс, чтобы на всех пк скорость была одинаковой
 
-        if keys[pygame.K_w]: self.rect.y -= speed
-        if keys[pygame.K_s]: self.rect.y += speed
-        if keys[pygame.K_a]:
+        if keys[pygame.K_w]:
+            self.rect.y -= speed
+            frames = self.jump
+            self.animation(frames, scaled_delta_time)
+        elif keys[pygame.K_s]:
+            self.rect.y += speed
+            frames = self.fall
+            self.animation(frames, scaled_delta_time)
+        elif keys[pygame.K_a]:
             self.rect.x -= speed
             frames = self.run_left
             self.animation(frames, scaled_delta_time)
-        if keys[pygame.K_d]:
+        elif keys[pygame.K_d]:
             self.rect.x += speed
             frames = self.run_right
             self.animation(frames, scaled_delta_time)

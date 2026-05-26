@@ -6,7 +6,7 @@ from map import Map
 WINDOW_SIZE = (1920, 1080) # размеры экрана
 
 SPEED = 10 # скорость персонажа
-SIZE = (600, 600) # размер
+SIZE = (610, 610) # размер персонажа
 ANIMATION_SPEED = 0.1
 
 
