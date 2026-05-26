@@ -7,13 +7,14 @@ class Player(pygame.sprite.Sprite):
         self.SIZE = settings.SIZE # из настроек
         self.SPEED = settings.SPEED
         self.ANIMATION_SPEED = settings.ANIMATION_SPEED
+        self.JUMP_COUNT = settings.JUMP_COUNT
 
         self.frame = 0 # для анимации
         self.count = 0
-        self.jump = False # для движения
-        self.jump_speed = 0
-        self.fall = False
-        self.fall_speed = 0
+        self.is_jump = False # для движения
+        self.jump_count = self.JUMP_COUNT
+        self.is_fall = False
+        self.fall_count = 0
 
         sprite_player = pygame.image.load('assets/player/player.png') # загрузка всех спрайтов персонажа
         sprite_run = pygame.image.load('assets/player/run.png')
@@ -55,24 +56,36 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         speed = self.SPEED * scaled_delta_time * 60 # лок на 60 фпс, чтобы на всех пк скорость была одинаковой
 
-        if keys[pygame.K_w] and self.rect.y > -200:
-            self.rect.y -= speed
-            frames = self.jump
-            self.animation(frames, scaled_delta_time)
-        elif keys[pygame.K_s] and self.rect.y < 660:
-            self.rect.y += speed
-            frames = self.fall
-            self.animation(frames, scaled_delta_time)
-        elif keys[pygame.K_a] and self.rect.x > -200:
+        if not self.is_jump: # прыжок
+            if (keys[pygame.K_w] or keys[pygame.K_SPACE]) and self.rect.y >= 660:
+                self.is_jump = True
+        else:
+            if self.jump_count >= -7:
+                if self.jump_count > 0:
+                    self.rect.y -= self.JUMP_COUNT
+                    self.animation(self.jump, scaled_delta_time)
+                elif self.jump_count < 0:
+                    self.rect.y += self.JUMP_COUNT
+                    self.animation(self.fall, scaled_delta_time)
+                self.jump_count -= 1
+            else:
+                self.is_jump = False
+                self.jump_count = self.JUMP_COUNT
+                self.rect.y = 660
+
+        if keys[pygame.K_a] and self.rect.x > -200: # AD движение
             self.rect.x -= speed
-            frames = self.run_left
-            self.animation(frames, scaled_delta_time)
+            if not self.is_fall and not self.is_jump:
+                self.animation(self.run_left, scaled_delta_time)
         elif keys[pygame.K_d] and self.rect.x < 1480:
             self.rect.x += speed
-            frames = self.run_right
-            self.animation(frames, scaled_delta_time)
-
-
+            if not self.is_fall and not self.is_jump:
+                self.animation(self.run_right, scaled_delta_time)
+        # elif keys[pygame.K_s] and self.rect.y < 660:
+        #     self.rect.y += speed
+        #     self.animation(self.fall, scaled_delta_time)
+        elif not self.is_jump:
+            self.animation(self.player, scaled_delta_time)
 
 
 

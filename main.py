@@ -13,6 +13,7 @@ class Player_settings:
         self.SPEED = 10 # скорость персонажа
         self.SIZE = (610, 610) # размер персонажа
         self.ANIMATION_SPEED = 0.1 # скорость анимации
+        self.JUMP_COUNT = 14 # высота прыжка
 
 
 class Game:
