@@ -3,11 +3,16 @@ import sys
 from player import Player
 from map import Map
 
-WINDOW_SIZE = (1920, 1080) # размеры экрана
+class Map_settings:
+    def __init__(self):
+        self.WINDOW_SIZE = (1920, 1080) # размер экрана
+        self.BACKGROUND_SPEED = 0.5 # скорость анимации фона
 
-SPEED = 10 # скорость персонажа
-SIZE = (610, 610) # размер персонажа
-ANIMATION_SPEED = 0.1
+class Player_settings:
+    def __init__(self):
+        self.SPEED = 10 # скорость персонажа
+        self.SIZE = (610, 610) # размер персонажа
+        self.ANIMATION_SPEED = 0.1 # скорость анимации
 
 
 class Game:
@@ -17,9 +22,9 @@ class Game:
         self.delta_time = 0.016 # время для 60 фпс
 
         self.all_sprites = pygame.sprite.Group()
-        self.player = Player(SIZE, SPEED, ANIMATION_SPEED) # инициализация классов
-        self.map = Map()
-        self.all_sprites.add(self.map, self.player) # добавляние классов в группу
+        self.player = Player(Player_settings()) # инициализация классов
+        self.map = Map(Map_settings())
+        self.all_sprites.add(self.map, self.player)
 
     def toggle_pause(self):
         self.is_paused = not self.is_paused
@@ -45,19 +50,22 @@ class Game:
         pass
 
     def draw(self, screen):
-        self.all_sprites.draw(screen)
+        self.all_sprites.draw(screen) # отрисовка всех классов сразу
         screen.blit(text_start, (200, 200)) # отрисовка текста в координатах (200, 200)
 
 
 if __name__ == "__main__":
     pygame.init()
-    screen = pygame.display.set_mode(WINDOW_SIZE) # открытие окна с размерами WINDOW_SIZE
+
+    screen = pygame.display.set_mode(Map_settings().WINDOW_SIZE) # открытие окна с размерами WINDOW_SIZE из класса
     pygame.display.set_caption("100 БАЛЛОВ") # название
     icon = pygame.image.load('assets/logo.png') # иконка
     pygame.display.set_icon(icon)
-
     font1 = pygame.font.Font('assets/font/1.ttf', 30) # шрифт
     text_start = font1.render('начало', True, 'red')
+    main_sound = pygame.mixer.Sound('assets/audio/main.mp3') # фоновая музыка
+    #main_sound.play()
+
 
     clock = pygame.time.Clock()
     game = Game()
